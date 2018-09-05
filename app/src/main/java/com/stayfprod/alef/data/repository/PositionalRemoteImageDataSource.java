@@ -19,29 +19,29 @@ import retrofit2.Response;
 
 public class PositionalRemoteImageDataSource extends PositionalDataSource<RemoteImage> {
 
-    private static volatile int k = 0;
+    private static volatile int sCounter = 0;
 
-    private final MutableLiveData<DataState> networkState;
-    private final MutableLiveData<DataState> initialLoad;
-    private final Executor retryExecutor;
-    private Runnable retryRunnable;
+    private final MutableLiveData<DataState> mNetworkState;
+    private final MutableLiveData<DataState> mInitialLoad;
+    private final Executor mRetryExecutor;
+    private Runnable mRetryRunnable;
 
     public PositionalRemoteImageDataSource(Executor retryExecutor) {
-        networkState = new MutableLiveData<>();
-        initialLoad = new MutableLiveData<>();
-        this.retryExecutor = retryExecutor;
+        mNetworkState = new MutableLiveData<>();
+        mInitialLoad = new MutableLiveData<>();
+        mRetryExecutor = retryExecutor;
     }
 
     public void retry() {
-        if (retryRunnable != null) retryRunnable.run();
+        if (mRetryRunnable != null) mRetryRunnable.run();
     }
 
     @Override
     public void loadInitial(@NonNull final LoadInitialParams params, @NonNull final LoadInitialCallback<RemoteImage> callback) {
-        retryRunnable = () -> retryExecutor.execute(() -> loadInitial(params, callback));
+        mRetryRunnable = () -> mRetryExecutor.execute(() -> loadInitial(params, callback));
         Call<List<RemoteImage>> request = ApiClient.getApi().getImages();
-        networkState.postValue(DataState.loading());
-        initialLoad.postValue(DataState.loading());
+        mNetworkState.postValue(DataState.loading());
+        mInitialLoad.postValue(DataState.loading());
         try {
             Thread.sleep(2000);
             Response<List<RemoteImage>> response = request.execute();
@@ -49,21 +49,20 @@ public class PositionalRemoteImageDataSource extends PositionalDataSource<Remote
             if (Objects.isBlank(result))
                 result = new ArrayList<>();
 
-            if (k == 0) {
-                k++;
+            if (sCounter == 0) {
+                sCounter++;
                 result.remove(3);
                 result.remove(1);
                 result.remove(3);
             }
 
             callback.onResult(result, 0);
-            networkState.postValue(DataState.loaded());
-            initialLoad.postValue(DataState.loaded());
-
+            mNetworkState.postValue(DataState.loaded());
+            mInitialLoad.postValue(DataState.loaded());
         } catch (Exception e) {
             DataState error = DataState.error(App.getResource().getString(R.string.error_500));
-            networkState.postValue(error);
-            initialLoad.postValue(error);
+            mNetworkState.postValue(error);
+            mInitialLoad.postValue(error);
         }
     }
 
@@ -72,11 +71,11 @@ public class PositionalRemoteImageDataSource extends PositionalDataSource<Remote
         callback.onResult(new ArrayList<>());
     }
 
-    public final MutableLiveData<DataState> getNetworkState() {
-        return networkState;
+    public MutableLiveData<DataState> getNetworkState() {
+        return mNetworkState;
     }
 
-    public final MutableLiveData<DataState> getInitialLoad() {
-        return initialLoad;
+    public MutableLiveData<DataState> getInitialLoad() {
+        return mInitialLoad;
     }
 }

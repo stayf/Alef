@@ -15,51 +15,48 @@ import androidx.paging.PagedList;
 @SuppressWarnings("unchecked")
 public class MainActivityVM extends ViewModel {
     private final static int PAGE_SIZE = 30;
-    private final RemoteImageRepository remoteImageRepository;
-    private final LiveData<Listing<RemoteImage>> repoResult;
-    private final LiveData<PagedList<RemoteImage>> data;
-    private final LiveData<DataState> networkState;
-    private final LiveData<DataState> refreshState;
+    private final RemoteImageRepository mRemoteImageRepository;
+    private final LiveData<Listing<RemoteImage>> mRepoResult;
+    private final LiveData<PagedList<RemoteImage>> mData;
+    private final LiveData<DataState> mNetworkState;
+    private final LiveData<DataState> mRefreshState;
 
     public MainActivityVM() {
-        remoteImageRepository = new RemoteImageRepository();
+        mRemoteImageRepository = new RemoteImageRepository();
         MutableLiveData init = new MutableLiveData<>();
         init.setValue(null);
-        repoResult = Transformations.map(init,
-                (Function<Listing<RemoteImage>, Listing<RemoteImage>>) input -> remoteImageRepository.getImagesAsync(PAGE_SIZE));
-        networkState = Transformations.switchMap(repoResult, Listing::getNetworkState);
-        refreshState = Transformations.switchMap(repoResult, Listing::getRefreshState);
-        data = Transformations.switchMap(repoResult, Listing::getPagedList);
+        mRepoResult = Transformations.map(init, (Function<Listing<RemoteImage>,
+                Listing<RemoteImage>>) input -> mRemoteImageRepository.getImagesAsync(PAGE_SIZE));
+        mNetworkState = Transformations.switchMap(mRepoResult, Listing::getNetworkState);
+        mRefreshState = Transformations.switchMap(mRepoResult, Listing::getRefreshState);
+        mData = Transformations.switchMap(mRepoResult, Listing::getPagedList);
     }
 
-    public final LiveData<PagedList<RemoteImage>> getData() {
-        return this.data;
+    public LiveData<PagedList<RemoteImage>> getData() {
+        return mData;
     }
 
-    public final LiveData<DataState> getNetworkState() {
-        return this.networkState;
+    public LiveData<DataState> getNetworkState() {
+        return mNetworkState;
     }
 
-    public final LiveData<DataState> getRefreshState() {
-        return this.refreshState;
+    public LiveData<DataState> getRefreshState() {
+        return mRefreshState;
     }
 
-    public final void retry() {
-        Listing listing = repoResult.getValue();
+    public void retry() {
+        Listing listing = mRepoResult.getValue();
         if (listing != null) {
             Runnable retry = listing.getRetry();
             if (retry != null) retry.run();
         }
     }
 
-    public final void refresh() {
-        Listing listing = repoResult.getValue();
+    public void refresh() {
+        Listing listing = mRepoResult.getValue();
         if (listing != null) {
-            Runnable runnable = listing.getRefresh();
-            if (runnable != null) {
-                runnable.run();
-            }
+            Runnable refresh = listing.getRefresh();
+            if (refresh != null) refresh.run();
         }
-
     }
 }

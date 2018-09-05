@@ -15,9 +15,9 @@ public class AppExecutor {
     private final Executor mMainThread;
 
     private AppExecutor(Executor diskIO, Executor networkIO, Executor mainThread) {
-        this.mDiskIO = diskIO;
-        this.mNetworkIO = networkIO;
-        this.mMainThread = mainThread;
+        mDiskIO = diskIO;
+        mNetworkIO = networkIO;
+        mMainThread = mainThread;
     }
 
     public AppExecutor() {

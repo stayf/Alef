@@ -26,10 +26,10 @@ public class MainActivity extends AbsActivity {
         mAdapter = new RemoteImageAdapter(this, (GridLayoutManager) mBind.list.getLayoutManager());
         mBind.list.setAdapter(mAdapter);
         mModel = ViewModelProviders.of(this).get(MainActivityVM.class);
-        subscribeUi();
+        subscribe();
     }
 
-    private void subscribeUi() {
+    private void subscribe() {
         mModel.getData().observe(this, remoteImages -> mAdapter.submitList(remoteImages));
         mModel.getNetworkState().observe(this, dataState -> {
             if (dataState.getStatus() == DataState.Status.FAILED)

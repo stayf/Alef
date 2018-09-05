@@ -8,10 +8,6 @@ import com.stayfprod.alef.util.Objects;
 public class RemoteImage {
     private String src;
 
-    public void setSrc(String src) {
-        this.src = src;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -27,5 +23,9 @@ public class RemoteImage {
 
     public String getSrc() {
         return src;
+    }
+
+    public void setSrc(String src) {
+        this.src = src;
     }
 }

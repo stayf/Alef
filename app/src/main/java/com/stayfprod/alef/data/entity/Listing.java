@@ -10,23 +10,23 @@ public final class Listing<T> {
     private final Runnable retry;
     private final Runnable refresh;
 
-    public final LiveData<PagedList<T>> getPagedList() {
+    public LiveData<PagedList<T>> getPagedList() {
         return this.pagedList;
     }
 
-    public final LiveData<DataState> getNetworkState() {
+    public LiveData<DataState> getNetworkState() {
         return this.networkState;
     }
 
-    public final LiveData<DataState> getRefreshState() {
+    public LiveData<DataState> getRefreshState() {
         return this.refreshState;
     }
 
-    public final Runnable getRetry() {
+    public Runnable getRetry() {
         return this.retry;
     }
 
-    public final Runnable getRefresh() {
+    public Runnable getRefresh() {
         return this.refresh;
     }
 

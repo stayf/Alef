@@ -6,11 +6,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.listener.BaseRequestListener;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.stayfprod.alef.R;
 import com.stayfprod.alef.data.entity.RemoteImage;

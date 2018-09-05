@@ -12,20 +12,19 @@ import androidx.paging.PagedList;
 
 public class RemoteImageRepository {
 
-    private AppExecutor appExecutor = new AppExecutor();
-
-    public RemoteImageRepository() {
-
-    }
+    private final AppExecutor mAppExecutor = new AppExecutor();
 
     public Listing<RemoteImage> getImagesAsync(int pageSize) {
-        final RemoteImageDataSourceFactory sourceFactory = new RemoteImageDataSourceFactory(appExecutor.networkIO());
+        final RemoteImageDataSourceFactory sourceFactory = new RemoteImageDataSourceFactory(mAppExecutor.networkIO());
+
         LiveData<PagedList<RemoteImage>> livePagedList = new LivePagedListBuilder<>(sourceFactory,
                 new PagedList.Config.Builder().setPageSize(pageSize).setEnablePlaceholders(false).build())
-                .setFetchExecutor(appExecutor.networkIO())
+                .setFetchExecutor(mAppExecutor.networkIO())
                 .build();
+
         LiveData<DataState> refreshState = Transformations.switchMap(
                 sourceFactory.getSourceLiveData(), PositionalRemoteImageDataSource::getInitialLoad);
+
         LiveData<DataState> networkState = Transformations.switchMap(
                 sourceFactory.getSourceLiveData(), PositionalRemoteImageDataSource::getNetworkState);
 

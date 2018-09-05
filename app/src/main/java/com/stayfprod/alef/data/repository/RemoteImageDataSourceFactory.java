@@ -8,22 +8,22 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 
 public class RemoteImageDataSourceFactory extends DataSource.Factory<Integer, RemoteImage> {
-    private final MutableLiveData<PositionalRemoteImageDataSource> sourceLiveData;
-    private Executor retryExecutor;
+    private final MutableLiveData<PositionalRemoteImageDataSource> mSourceLiveData;
+    private final Executor mRetryExecutor;
 
     public RemoteImageDataSourceFactory(Executor retryExecutor) {
-        sourceLiveData = new MutableLiveData<>();
-        this.retryExecutor = retryExecutor;
+        mSourceLiveData = new MutableLiveData<>();
+        mRetryExecutor = retryExecutor;
     }
 
     public MutableLiveData<PositionalRemoteImageDataSource> getSourceLiveData() {
-        return sourceLiveData;
+        return mSourceLiveData;
     }
 
     @Override
     public DataSource<Integer, RemoteImage> create() {
-        PositionalRemoteImageDataSource source = new PositionalRemoteImageDataSource(retryExecutor);
-        sourceLiveData.postValue(source);
+        PositionalRemoteImageDataSource source = new PositionalRemoteImageDataSource(mRetryExecutor);
+        mSourceLiveData.postValue(source);
         return source;
     }
 }
