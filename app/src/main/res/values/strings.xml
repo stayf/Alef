@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Alef</string>
+
+    <string name="btn_repeat">Retry</string>
+
+    <string name="error_no_internet">No internet connection.</string>
+    <string name="error_500">Server Error</string>
+</resources>
